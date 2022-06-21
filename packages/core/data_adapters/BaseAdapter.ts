@@ -239,7 +239,17 @@ export abstract class BaseFeatureDataAdapter extends BaseAdapter {
       (a, b) => a + b.scoreSumSquares,
       0,
     )
-    const featureCount = regionStats.reduce((a, b) => a + b.featureCount, 0)
+    // adds two numbers that might be NaN or undefined, with undefined
+    // being the result if either of them or NaN or undefined
+    function undefinedAdd(a?: number, b?: number) {
+      if (a === undefined || b === undefined || isNaN(a) || isNaN(b)) {
+        return undefined
+      }
+      return a + b
+    }
+    const featureCount = regionStats
+      .map(s => s.featureCount)
+      .reduce(undefinedAdd, 0)
     const basesCovered = regionStats.reduce((a, b) => a + b.basesCovered, 0)
 
     return rectifyStats({
