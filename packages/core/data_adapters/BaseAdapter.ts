@@ -220,37 +220,76 @@ export abstract class BaseFeatureDataAdapter extends BaseAdapter {
     if (!regions.length) {
       return blankStats()
     }
+
+    // adds two numbers that might be NaN or undefined, with undefined
+    // being the result if either of them is NaN or undefined
+    function undefinedAdd(a?: number, b?: number) {
+      if (a === undefined || isNaN(a)) {
+        if (b === undefined || isNaN(b)) {
+          return undefined
+        } else {
+          return b
+        }
+      } else {
+        if (b === undefined || isNaN(b)) {
+          return a
+        } else {
+          return a + b
+        }
+      }
+    }
+    function undefinedMax(a?: number, b?: number) {
+      if (a === undefined || isNaN(a)) {
+        if (b === undefined || isNaN(b)) {
+          return undefined
+        } else {
+          return b
+        }
+      } else {
+        if (b === undefined || isNaN(b)) {
+          return a
+        } else {
+          return Math.max(a, b)
+        }
+      }
+    }
+    function undefinedMin(a?: number, b?: number) {
+      if (a === undefined || isNaN(a)) {
+        if (b === undefined || isNaN(b)) {
+          return undefined
+        } else {
+          return b
+        }
+      } else {
+        if (b === undefined || isNaN(b)) {
+          return a
+        } else {
+          return Math.min(a, b)
+        }
+      }
+    }
+
     const regionStats = await Promise.all(
       regions.map(region => this.getRegionStats(region, opts)),
     )
 
     const scoreMax = regionStats
       .map(a => a.scoreMax)
-      .reduce((a, b) =>
-        a === undefined ? b : b === undefined ? a : Math.max(a, b),
-      )
+      .reduce(undefinedMax, undefined)
     const scoreMin = regionStats
       .map(a => a.scoreMin)
-      .reduce((a, b) =>
-        a === undefined ? b : b === undefined ? a : Math.min(a, b),
-      )
-    const scoreSum = regionStats.reduce((a, b) => a + b.scoreSum, 0)
-    const scoreSumSquares = regionStats.reduce(
-      (a, b) => a + b.scoreSumSquares,
-      0,
-    )
-    // adds two numbers that might be NaN or undefined, with undefined
-    // being the result if either of them or NaN or undefined
-    function undefinedAdd(a?: number, b?: number) {
-      if (a === undefined || b === undefined || isNaN(a) || isNaN(b)) {
-        return undefined
-      }
-      return a + b
-    }
+      .reduce(undefinedMin, undefined)
+    const scoreSum = regionStats.map(a => a.scoreSum).reduce(undefinedAdd, 0)
+    const scoreSumSquares = regionStats
+      .map(a => a.scoreSumSquares)
+      .reduce(undefinedAdd, 0)
+
     const featureCount = regionStats
       .map(s => s.featureCount)
       .reduce(undefinedAdd, 0)
-    const basesCovered = regionStats.reduce((a, b) => a + b.basesCovered, 0)
+    const basesCovered = regionStats
+      .map(s => s.basesCovered)
+      .reduce(undefinedAdd, 0)
 
     return rectifyStats({
       scoreMin,
