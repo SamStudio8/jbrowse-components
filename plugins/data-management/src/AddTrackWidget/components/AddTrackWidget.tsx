@@ -8,6 +8,7 @@ import { getEnv } from 'mobx-state-tree'
 // locals
 import { AddTrackModel } from '../model'
 import DefaultAddTrackWorkflow from './DefaultAddTrackWorkflow'
+import PasteConfigWorkflow from './PasteConfigWorkflow'
 
 function AddTrackSelector({ model }: { model: AddTrackModel }) {
   const [val, setVal] = useLocalStorage('trackSelector-choice', 'Default')
@@ -17,6 +18,7 @@ function AddTrackSelector({ model }: { model: AddTrackModel }) {
   ) as AddTrackWorkflowType[]
   const ComponentMap = {
     Default: DefaultAddTrackWorkflow,
+    'Add track JSON': PasteConfigWorkflow,
     ...Object.fromEntries(widgets.map(w => [w.name, w.ReactComponent])),
   } as { [key: string]: React.FC<{ model: AddTrackModel }> }
 
