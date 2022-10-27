@@ -2568,6 +2568,49 @@ Object {
       ],
       "displays": Array [
         Object {
+          "displayId": "variant_colors_displaymod-LinearVariantDisplay",
+          "maxFeatureScreenDensity": 0.0006,
+          "renderer": Object {
+            "color1": "jexl:get(feature,'type')=='SNV'?'green':'purple'",
+            "type": "SvgFeatureRenderer",
+          },
+          "type": "LinearVariantDisplay",
+        },
+        Object {
+          "displayId": "variant_colors_displaymod-ChordVariantDisplay",
+          "type": "ChordVariantDisplay",
+        },
+      ],
+      "name": "volvox filtered vcf (green snp, purple indel, modified display conf)",
+      "trackId": "variant_colors_displaymod",
+      "type": "VariantTrack",
+    },
+    Object {
+      "adapter": Object {
+        "index": Object {
+          "location": Object {
+            "internetAccountId": undefined,
+            "internetAccountPreAuthorization": undefined,
+            "locationType": "UriLocation",
+            "uri": "volvox.filtered.vcf.gz.tbi",
+          },
+        },
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": Object {
+          "internetAccountId": undefined,
+          "internetAccountPreAuthorization": undefined,
+          "locationType": "UriLocation",
+          "uri": "volvox.filtered.vcf.gz",
+        },
+      },
+      "assemblyNames": Array [
+        "volvox",
+      ],
+      "category": Array [
+        "VCF",
+      ],
+      "displays": Array [
+        Object {
           "displayId": "volvox_filtered_vcf_color-ChordVariantDisplay",
           "type": "ChordVariantDisplay",
         },

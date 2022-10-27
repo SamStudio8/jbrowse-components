@@ -1,7 +1,15 @@
 {
   "plugins": [
-    { "name": "UMDLocPlugin", "umdLoc": { "uri": "umd_plugin.js" } },
-    { "name": "UMDUrlPlugin", "umdUrl": "umd_plugin.js" }
+    {
+      "name": "UMDLocPlugin",
+      "umdLoc": {
+        "uri": "umd_plugin.js"
+      }
+    },
+    {
+      "name": "UMDUrlPlugin",
+      "umdUrl": "umd_plugin.js"
+    }
   ],
   "assemblies": [
     {
@@ -1432,6 +1440,35 @@
         "bigWigLocation": {
           "uri": "volvox.bw.nonexist",
           "locationType": "UriLocation"
+        }
+      }
+    },
+    {
+      "type": "VariantTrack",
+      "trackId": "variant_colors_displaymod",
+      "name": "volvox filtered vcf (green snp, purple indel, modified display conf)",
+      "category": ["VCF"],
+      "assemblyNames": ["volvox"],
+      "adapter": {
+        "type": "VcfTabixAdapter",
+        "vcfGzLocation": {
+          "uri": "volvox.filtered.vcf.gz",
+          "locationType": "UriLocation"
+        },
+        "index": {
+          "location": {
+            "uri": "volvox.filtered.vcf.gz.tbi",
+            "locationType": "UriLocation"
+          }
+        }
+      },
+      "displays": {
+        "LinearVariantDisplay": {
+          "maxFeatureScreenDensity": 0.0006,
+          "renderer": {
+            "type": "SvgFeatureRenderer",
+            "color1": "jexl:get(feature,'type')=='SNV'?'green':'purple'"
+          }
         }
       }
     },
